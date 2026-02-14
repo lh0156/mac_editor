@@ -60,6 +60,27 @@ swiftc -parse-as-library \
 
 # Live Stress QA (반복)
 INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa
+
+# App UI QA (실제 ReaderRootView 스택)
+swiftc -module-name InkArcAppQATemp \
+  -o /tmp/inkarc-app-qa \
+  /Users/developseop/Desktop/mac_editor/QA/InkArcAppQARunner.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/ReaderRootView.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift \
+  -framework SwiftUI \
+  -framework AppKit \
+  -framework UniformTypeIdentifiers
+
+INKARC_APP_QA_LOOPS=3 /tmp/inkarc-app-qa
+
+# Continuous Live Soak QA (무한 반복, 실패 시 즉시 종료)
+cd /Users/developseop/Desktop/mac_editor
+./QA/run_live_soak.sh
+
+# 배치 제한 예시 (테스트용)
+INKARC_LIVE_STRESS_LOOPS_PER_BATCH=120 INKARC_LIVE_STRESS_MAX_BATCHES=10 ./QA/run_live_soak.sh
 ```
 
 정상 결과:
@@ -67,4 +88,5 @@ INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa
 QA RESULT: PASS
 CORE QA RESULT: PASS
 LIVE UI QA RESULT: PASS
+APP UI QA RESULT: PASS
 ```

@@ -1,6 +1,6 @@
 # InkArc Editor Policy (Notion + Typora + Research)
 
-버전: v1.1 (2026-02-14)
+버전: v1.2 (2026-02-14)
 적용 범위: `/Users/developseop/Desktop/mac_editor`
 
 ## 1) 제품 원칙
@@ -134,6 +134,16 @@
   - `INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa`
   - 기대 결과: `LIVE UI QA RESULT: PASS`
   - 1회라도 실패 시 릴리즈 차단.
+- App UI QA (실제 ReaderRootView/Editor 스택):
+  - `swiftc -module-name InkArcAppQATemp -o /tmp/inkarc-app-qa /Users/developseop/Desktop/mac_editor/QA/InkArcAppQARunner.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderRootView.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift -framework SwiftUI -framework AppKit -framework UniformTypeIdentifiers`
+  - `INKARC_APP_QA_LOOPS=3 /tmp/inkarc-app-qa`
+  - 기대 결과: `APP UI QA RESULT: PASS`
+- Continuous Live Soak QA (무한 반복):
+  - `cd /Users/developseop/Desktop/mac_editor && ./QA/run_live_soak.sh`
+  - 기본값은 무한 반복(`INKARC_LIVE_STRESS_MAX_BATCHES=0`)이며, 실패 시 즉시 종료.
+  - 수동 종료 전까지 실패가 없을 것.
+  - 필요 시 배치 제한:
+    - `INKARC_LIVE_STRESS_LOOPS_PER_BATCH=120 INKARC_LIVE_STRESS_MAX_BATCHES=10 ./QA/run_live_soak.sh`
 
 ### 수동 스모크 (필수)
 - `-` 입력 직후 글자 크기 붕괴 없음.
@@ -156,6 +166,11 @@
   - CPL 계산 근거를 함께 기록.
 - 접근성 관련 변경 시:
   - WCAG 관련 기준(대비/spacing/resize) 충돌 여부를 우선 점검.
+- 사용자 명시 요청 시:
+  - Live Soak QA를 무한 반복 모드로 실행하고, 실패 케이스가 0이 아닐 경우 수정 후 다시 반복한다.
+  - QA가 100% 통과하지 않으면 릴리즈/완료 보고를 금지한다.
+- 단기 수정 사이클 규칙:
+  - 동일 테스트 루프는 회차당 최대 3회까지만 실행하고, 미통과 시 코드 수정으로 즉시 전환한다.
 
 ## References
 - Notion Keyboard Shortcuts: https://www.notion.com/help/keyboard-shortcuts

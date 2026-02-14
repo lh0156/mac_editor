@@ -8,6 +8,8 @@
 - Core QA: `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift /Users/developseop/Desktop/mac_editor/QA/InkArcCoreQARunner.swift -o /tmp/inkarc-core-qa && /tmp/inkarc-core-qa`
 - Live UI QA: `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/QA/InkArcUILiveQARunner.swift /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift -o /tmp/inkarc-live-qa && /tmp/inkarc-live-qa`
 - Live UI Stress QA: `INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa`
+- Continuous Live Soak QA: `cd /Users/developseop/Desktop/mac_editor && ./QA/run_live_soak.sh`
+- App UI QA: `swiftc -module-name InkArcAppQATemp -o /tmp/inkarc-app-qa /Users/developseop/Desktop/mac_editor/QA/InkArcAppQARunner.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderRootView.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift -framework SwiftUI -framework AppKit -framework UniformTypeIdentifiers && INKARC_APP_QA_LOOPS=3 /tmp/inkarc-app-qa`
 
 ## TC 목록
 
@@ -53,6 +55,10 @@
 | TC-LIVE-006 | 6 | 실제 리스트 Enter 연속/더블 Enter 종료 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-007 | 5, 6 | 실제 `- ` 입력 시 불릿 중복 마커(`dot + short bar + '-'`) 비발생 검증 | `InkArcUILiveQARunner.swift` |
 | TC-STRESS-001 | 6 | Live UI QA를 N회 반복 실행해 회귀/플레이키니스 검출 | `InkArcUILiveQARunner.swift` |
+| TC-STRESS-002 | 6, 7 | Live QA 배치 무한 반복(또는 지정 배치 수) 실행 시 실패 즉시 중단 | `run_live_soak.sh` |
+| TC-APP-001 | 6 | 실제 ReaderRootView 스택에서 불릿 중복 마커 비발생 검증 | `InkArcAppQARunner.swift` |
+| TC-APP-002 | 6 | 실제 ReaderRootView 스택에서 토글 자식 입력 가시성 검증 | `InkArcAppQARunner.swift` |
+| TC-APP-003 | 6 | 실제 ReaderRootView 스택에서 Cmd+Enter 토글 반응 검증 | `InkArcAppQARunner.swift` |
 | TC-CORE-001 | 3.1 | Research CPL 범위(55~75) | `InkArcCoreQARunner.swift` |
 | TC-CORE-002 | 3.1 | Compact CPL 범위(70~90) | `InkArcCoreQARunner.swift` |
 | TC-CORE-003 | 3.1 | content width bounds(560~920) | `InkArcCoreQARunner.swift` |
