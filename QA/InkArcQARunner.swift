@@ -437,6 +437,12 @@ struct InkArcQARunner {
         }
 
         do {
+            let (_, textView) = makeHarness(initial: "- bullet")
+            let markerAlpha = (attrsAtToken("-", in: textView)[.foregroundColor] as? NSColor)?.alphaComponent ?? 1
+            expect(markerAlpha <= 0.05, "bullet marker: '-' glyph should stay hidden to avoid duplicate marker rendering")
+        }
+
+        do {
             let (coordinator, textView) = makeHarness(initial: "> Parent\n  child line\n# Next")
             coordinator.applyTypography(to: textView)
             if let toggle = textView.lineDecorations.first(where: { $0.kind == .toggle }) {

@@ -1095,22 +1095,14 @@ struct PlainMarkdownEditor: NSViewRepresentable {
                             )
                         } else {
                             storage.addAttributes(
-                                hiddenMarkerAttributes(
-                                    baseFont: baseFont,
-                                    collapseFactor: 0.30,
-                                    activeLine: isActiveLine
-                                ),
+                                hiddenMarkerAttributes(baseFont: baseFont, collapseFactor: 0.30),
                                 range: markerSpaceAbsolute
                             )
                             decorations.append(
                                 .init(kind: .bullet, markerLocation: markerAbsolute.location, isCollapsed: false)
                             )
                             storage.addAttributes(
-                                hiddenMarkerAttributes(
-                                    baseFont: baseFont,
-                                    collapseFactor: 0.30,
-                                    activeLine: isActiveLine
-                                ),
+                                hiddenMarkerAttributes(baseFont: baseFont, collapseFactor: 0.30),
                                 range: markerAbsolute
                             )
                         }
