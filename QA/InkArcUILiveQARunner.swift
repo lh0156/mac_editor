@@ -251,6 +251,14 @@ struct InkArcUILiveQARunner {
         return (storage.attributes(at: range.location, effectiveRange: nil)[.foregroundColor] as? NSColor)?.alphaComponent ?? -1
     }
 
+    private static func stressLoopCount() -> Int {
+        let env = ProcessInfo.processInfo.environment
+        guard let raw = env["INKARC_LIVE_STRESS_LOOPS"], let parsed = Int(raw), parsed > 0 else {
+            return 1
+        }
+        return min(parsed, 2000)
+    }
+
     static func main() {
         _ = NSApplication.shared
         NSApp.setActivationPolicy(.regular)
@@ -368,6 +376,43 @@ struct InkArcUILiveQARunner {
             placeCaretEnd(h)
             expect(pressEnter(h), "TC-LIVE-006: second Enter not handled")
             expect(h.textView.string == "- first\n", "TC-LIVE-006: double-enter escape mismatch")
+            h.window.close()
+        }
+
+        // TC-LIVE-007: Bullet marker should not visually duplicate with '-' glyph.
+        do {
+            let h = makeHarness(initial: "")
+            type("- ", in: h)
+            expect(h.textView.string == "- ", "TC-LIVE-007: bullet line input mismatch")
+            let bulletCount = h.textView.lineDecorations.filter { $0.kind == .bullet }.count
+            expect(bulletCount == 1, "TC-LIVE-007: bullet decoration missing")
+            expect(
+                alpha(of: "-", in: h) <= 0.05,
+                "TC-LIVE-007: '-' glyph is visible with custom bullet (duplicate marker)"
+            )
+            h.window.close()
+        }
+
+        // TC-STRESS-001: Repeat core live scenarios to catch flaky regressions.
+        let loops = stressLoopCount()
+        for idx in 1 ... loops {
+            let h = makeHarness(initial: "> stress parent")
+            placeCaretEnd(h)
+            expect(pressEnter(h), "TC-STRESS-001[\(idx)]: Enter not handled")
+            type("- stress", in: h)
+            let bulletCount = h.textView.lineDecorations.filter { $0.kind == .bullet }.count
+            expect(bulletCount >= 1, "TC-STRESS-001[\(idx)]: bullet decoration missing")
+            expect(
+                alpha(of: "-", in: h) <= 0.05,
+                "TC-STRESS-001[\(idx)]: duplicate bullet marker visible"
+            )
+            placeCaret(at: "stress", in: h)
+            sendEnterShortcut(h, modifiers: [.command])
+            if let toggle = h.textView.lineDecorations.first(where: { $0.kind == .toggle }) {
+                expect(toggle.isCollapsed, "TC-STRESS-001[\(idx)]: Cmd+Enter failed to collapse")
+            } else {
+                failures.append("TC-STRESS-001[\(idx)]: toggle decoration missing")
+            }
             h.window.close()
         }
 

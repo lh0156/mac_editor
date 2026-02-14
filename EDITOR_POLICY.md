@@ -1,7 +1,7 @@
 # InkArc Editor Policy (Notion + Typora + Research)
 
-버전: v1.0 (2026-02-14)
-적용 범위: `/Users/developseop/Desktop/InkArc`
+버전: v1.1 (2026-02-14)
+적용 범위: `/Users/developseop/Desktop/mac_editor`
 
 ## 1) 제품 원칙
 - 목표: "바로 쓰기 시작 가능한" 단일 캔버스 Markdown 에디터.
@@ -103,6 +103,9 @@
 - 불릿 리스트의 시각 시그니처는 "dot + short bar"를 유지:
   - 점만 보이거나 바만 보이는 형태로 임의 변경 금지.
   - 바 길이/두께/간격은 버전 관리 하에 변경.
+- 불릿 중복 표식 금지:
+  - 커스텀 불릿(`dot + short bar`)이 보이는 라인에서는 원문 마커 글리프(`-`, `*`, `+`)가 추가로 보이면 안 됨.
+  - 활성 라인/빈 라인/입력 직후 상태에서도 `dot + short bar + '-'` 같은 중복 표시는 릴리즈 차단 사유.
 - 텍스트 편집에 무관한 장식(강한 그라디언트/과한 유리효과)은 기본 비활성.
 
 ## 6) QA 운영 정책 (릴리즈 게이트)
@@ -117,13 +120,20 @@
 
 ### 자동 QA (필수)
 - Build:
-  - `cd /Users/developseop/Desktop/InkArc && swift build`
+  - `cd /Users/developseop/Desktop/mac_editor && swift build`
 - Editor QA:
-  - `swiftc -parse-as-library /Users/developseop/Desktop/InkArc/Sources/PlainMarkdownEditor.swift /Users/developseop/Desktop/InkArc/QA/InkArcQARunner.swift -o /tmp/inkarc-qa && /tmp/inkarc-qa`
+  - `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift /Users/developseop/Desktop/mac_editor/QA/InkArcQARunner.swift -o /tmp/inkarc-qa && /tmp/inkarc-qa`
   - 기대 결과: `QA RESULT: PASS`
 - Core QA:
-  - `swiftc -parse-as-library /Users/developseop/Desktop/InkArc/Sources/ReaderSettings.swift /Users/developseop/Desktop/InkArc/Sources/ReaderModel.swift /Users/developseop/Desktop/InkArc/QA/InkArcCoreQARunner.swift -o /tmp/inkarc-core-qa && /tmp/inkarc-core-qa`
+  - `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift /Users/developseop/Desktop/mac_editor/QA/InkArcCoreQARunner.swift -o /tmp/inkarc-core-qa && /tmp/inkarc-core-qa`
   - 기대 결과: `CORE QA RESULT: PASS`
+- Live UI QA:
+  - `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/QA/InkArcUILiveQARunner.swift /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift -o /tmp/inkarc-live-qa && /tmp/inkarc-live-qa`
+  - 기대 결과: `LIVE UI QA RESULT: PASS`
+- Live UI Stress QA (반복):
+  - `INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa`
+  - 기대 결과: `LIVE UI QA RESULT: PASS`
+  - 1회라도 실패 시 릴리즈 차단.
 
 ### 수동 스모크 (필수)
 - `-` 입력 직후 글자 크기 붕괴 없음.
@@ -132,6 +142,7 @@
 - 체크박스 클릭 2회 -> `[ ] -> [x] -> [ ]` 왕복.
 - 확대/축소 후에도 가로 스크롤 없이 본문 읽기 가능.
 - 불릿 마커 시그니처(`dot + short bar`) 유지 확인.
+- 불릿 라인에서 중복 마커(`dot + short bar` + `-`)가 보이지 않는지 확인.
 - `/` 팔레트에 필수 오브젝트(텍스트/제목/목록/토글/페이지/콜아웃/인용) 표시 확인.
 - 코드 블록이 모노스페이스 + 별도 배경으로 렌더되는지 확인.
 - 체크박스-텍스트 정렬:

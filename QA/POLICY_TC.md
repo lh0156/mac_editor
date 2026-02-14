@@ -1,11 +1,13 @@
 # Policy Test Cases (TC)
 
-기준 문서: `/Users/developseop/Desktop/InkArc/EDITOR_POLICY.md`
+기준 문서: `/Users/developseop/Desktop/mac_editor/EDITOR_POLICY.md`
 
 ## 실행 명령
-- Build: `cd /Users/developseop/Desktop/InkArc && swift build`
-- Editor QA: `swiftc -parse-as-library /Users/developseop/Desktop/InkArc/Sources/PlainMarkdownEditor.swift /Users/developseop/Desktop/InkArc/QA/InkArcQARunner.swift -o /tmp/inkarc-qa && /tmp/inkarc-qa`
-- Core QA: `swiftc -parse-as-library /Users/developseop/Desktop/InkArc/Sources/ReaderSettings.swift /Users/developseop/Desktop/InkArc/Sources/ReaderModel.swift /Users/developseop/Desktop/InkArc/QA/InkArcCoreQARunner.swift -o /tmp/inkarc-core-qa && /tmp/inkarc-core-qa`
+- Build: `cd /Users/developseop/Desktop/mac_editor && swift build`
+- Editor QA: `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift /Users/developseop/Desktop/mac_editor/QA/InkArcQARunner.swift -o /tmp/inkarc-qa && /tmp/inkarc-qa`
+- Core QA: `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift /Users/developseop/Desktop/mac_editor/QA/InkArcCoreQARunner.swift -o /tmp/inkarc-core-qa && /tmp/inkarc-core-qa`
+- Live UI QA: `swiftc -parse-as-library /Users/developseop/Desktop/mac_editor/QA/InkArcUILiveQARunner.swift /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift -o /tmp/inkarc-live-qa && /tmp/inkarc-live-qa`
+- Live UI Stress QA: `INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa`
 
 ## TC 목록
 
@@ -42,6 +44,15 @@
 | TC-VIS-003 | 6 | 체크박스 아이콘-텍스트 gap 범위(8~26px) | `InkArcQARunner.swift` |
 | TC-VIS-004 | 6 | 체크박스 아이콘 중심 y와 텍스트 라인 중심 y 오차(`<=1.2px`) | `InkArcQARunner.swift` |
 | TC-VIS-005 | 6 | 연속 행 체크박스 gap 편차(`<=1.2px`) | `InkArcQARunner.swift` |
+| TC-VIS-006 | 5 | 불릿 라인에서 원문 `-` 글리프가 보이지 않아 중복 마커가 발생하지 않음 | `InkArcQARunner.swift` |
+| TC-LIVE-001 | 6 | 실제 윈도우/입력 이벤트로 토글 자식 입력 가시성 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-002 | 6 | 실제 윈도우에서 insertLineBreak/insertNewlineIgnoringFieldEditor 폴백 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-003 | 6 | 실제 토글 아이콘 클릭 접기/펼치기 왕복 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-004 | 6 | 실제 체크박스 클릭 `[ ]`↔`[x]` 왕복 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-005 | 6 | 실제 Cmd/Alt+Enter 토글 단축키 동작 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-006 | 6 | 실제 리스트 Enter 연속/더블 Enter 종료 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-007 | 5, 6 | 실제 `- ` 입력 시 불릿 중복 마커(`dot + short bar + '-'`) 비발생 검증 | `InkArcUILiveQARunner.swift` |
+| TC-STRESS-001 | 6 | Live UI QA를 N회 반복 실행해 회귀/플레이키니스 검출 | `InkArcUILiveQARunner.swift` |
 | TC-CORE-001 | 3.1 | Research CPL 범위(55~75) | `InkArcCoreQARunner.swift` |
 | TC-CORE-002 | 3.1 | Compact CPL 범위(70~90) | `InkArcCoreQARunner.swift` |
 | TC-CORE-003 | 3.1 | content width bounds(560~920) | `InkArcCoreQARunner.swift` |

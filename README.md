@@ -4,13 +4,13 @@ macOS용 단일 캔버스 Markdown 에디터입니다.
 Typora처럼 본문 자체가 렌더링되고, Notion처럼 블록 입력 UX(`-`, `>`, `[]`, `"` + Enter 흐름)를 지원합니다.
 
 ## Location
-- `/Users/developseop/Desktop/InkArc`
-- 정책 문서: `/Users/developseop/Desktop/InkArc/EDITOR_POLICY.md`
-- TC 매트릭스: `/Users/developseop/Desktop/InkArc/QA/POLICY_TC.md`
+- `/Users/developseop/Desktop/mac_editor`
+- 정책 문서: `/Users/developseop/Desktop/mac_editor/EDITOR_POLICY.md`
+- TC 매트릭스: `/Users/developseop/Desktop/mac_editor/QA/POLICY_TC.md`
 
 ## Run
 ```bash
-cd /Users/developseop/Desktop/InkArc
+cd /Users/developseop/Desktop/mac_editor
 swift run
 ```
 
@@ -35,24 +35,36 @@ swift run
 ```bash
 # Editor QA
 swiftc -parse-as-library \
-  /Users/developseop/Desktop/InkArc/Sources/PlainMarkdownEditor.swift \
-  /Users/developseop/Desktop/InkArc/QA/InkArcQARunner.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift \
+  /Users/developseop/Desktop/mac_editor/QA/InkArcQARunner.swift \
   -o /tmp/inkarc-qa
 
 /tmp/inkarc-qa
 
 # Core QA (ReaderModel / ReaderSettings)
 swiftc -parse-as-library \
-  /Users/developseop/Desktop/InkArc/Sources/ReaderSettings.swift \
-  /Users/developseop/Desktop/InkArc/Sources/ReaderModel.swift \
-  /Users/developseop/Desktop/InkArc/QA/InkArcCoreQARunner.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/ReaderSettings.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/ReaderModel.swift \
+  /Users/developseop/Desktop/mac_editor/QA/InkArcCoreQARunner.swift \
   -o /tmp/inkarc-core-qa
 
 /tmp/inkarc-core-qa
+
+# Live UI QA (실제 윈도우/입력 이벤트)
+swiftc -parse-as-library \
+  /Users/developseop/Desktop/mac_editor/QA/InkArcUILiveQARunner.swift \
+  /Users/developseop/Desktop/mac_editor/Sources/PlainMarkdownEditor.swift \
+  -o /tmp/inkarc-live-qa
+
+/tmp/inkarc-live-qa
+
+# Live Stress QA (반복)
+INKARC_LIVE_STRESS_LOOPS=80 /tmp/inkarc-live-qa
 ```
 
 정상 결과:
 ```text
 QA RESULT: PASS
 CORE QA RESULT: PASS
+LIVE UI QA RESULT: PASS
 ```
