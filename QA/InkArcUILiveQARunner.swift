@@ -390,9 +390,6 @@ struct InkArcUILiveQARunner {
                 alpha(of: "-", in: h) <= 0.05,
                 "TC-LIVE-007: '-' glyph is visible with custom bullet (duplicate marker)"
             )
-            if let bullet = bullets.first {
-                expect(!bullet.showsGuideBar, "TC-LIVE-007: empty active bullet should hide guide bar")
-            }
             h.window.close()
         }
 

@@ -190,10 +190,7 @@ struct InkArcQARunner {
         }
 
         do {
-            expect(NotionMarkdownTextView.bulletVisualSignature == "dot-bar-v1", "visual signature: bullet signature version mismatch")
-            expect(abs(NotionMarkdownTextView.bulletGuideWidth - 6.5) < 0.001, "visual signature: bullet guide width changed")
-            expect(abs(NotionMarkdownTextView.bulletGuideHeight - 1.6) < 0.001, "visual signature: bullet guide height changed")
-            expect(abs(NotionMarkdownTextView.bulletGuideGap - 3.8) < 0.001, "visual signature: bullet guide gap changed")
+            expect(NotionMarkdownTextView.bulletVisualSignature == "dot-only-v1", "visual signature: bullet signature version mismatch")
         }
 
         do {
@@ -440,15 +437,6 @@ struct InkArcQARunner {
             let (_, textView) = makeHarness(initial: "- bullet")
             let markerAlpha = (attrsAtToken("-", in: textView)[.foregroundColor] as? NSColor)?.alphaComponent ?? 1
             expect(markerAlpha <= 0.05, "bullet marker: '-' glyph should stay hidden to avoid duplicate marker rendering")
-        }
-
-        do {
-            let (_, textView) = makeHarness(initial: "- ")
-            if let bullet = textView.lineDecorations.first(where: { $0.kind == .bullet }) {
-                expect(!bullet.showsGuideBar, "bullet marker: empty active bullet should hide guide bar to avoid '-' illusion")
-            } else {
-                failures.append("bullet marker: missing decoration for empty bullet line")
-            }
         }
 
         do {

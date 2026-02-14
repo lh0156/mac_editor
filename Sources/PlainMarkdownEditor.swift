@@ -2,9 +2,9 @@ import SwiftUI
 import AppKit
 
 final class NotionMarkdownTextView: NSTextView {
-    // Visual signature for list marker rendering: dot + short bar.
+    // Visual signature for list marker rendering: dot only.
     // Keep stable unless policy is intentionally revised.
-    static let bulletVisualSignature = "dot-bar-v1"
+    static let bulletVisualSignature = "dot-only-v1"
     static let markerColumnOffset: CGFloat = 22
     static let bulletIconSize: CGFloat = 14
     static let toggleIconSize: CGFloat = 18
@@ -14,9 +14,6 @@ final class NotionMarkdownTextView: NSTextView {
     static let checkboxVerticalOffset: CGFloat = 0.80
     static let taskTextGapMin: CGFloat = 8
     static let taskTextGapMax: CGFloat = 26
-    static let bulletGuideWidth: CGFloat = 6.5
-    static let bulletGuideHeight: CGFloat = 1.6
-    static let bulletGuideGap: CGFloat = 3.8
 
     struct SlashCommandItem {
         let title: String
@@ -51,20 +48,12 @@ final class NotionMarkdownTextView: NSTextView {
         let markerLocation: Int
         let isCollapsed: Bool
         let isChecked: Bool
-        let showsGuideBar: Bool
 
-        init(
-            kind: DecorationKind,
-            markerLocation: Int,
-            isCollapsed: Bool,
-            isChecked: Bool = false,
-            showsGuideBar: Bool = true
-        ) {
+        init(kind: DecorationKind, markerLocation: Int, isCollapsed: Bool, isChecked: Bool = false) {
             self.kind = kind
             self.markerLocation = markerLocation
             self.isCollapsed = isCollapsed
             self.isChecked = isChecked
-            self.showsGuideBar = showsGuideBar
         }
     }
 
@@ -267,22 +256,6 @@ final class NotionMarkdownTextView: NSTextView {
             let path = NSBezierPath(ovalIn: dotRect)
             symbolColor.setFill()
             path.fill()
-
-            if decoration.showsGuideBar {
-                let barRect = NSRect(
-                    x: dotRect.maxX + Self.bulletGuideGap,
-                    y: frame.midY - (Self.bulletGuideHeight / 2),
-                    width: Self.bulletGuideWidth,
-                    height: Self.bulletGuideHeight
-                )
-                let barPath = NSBezierPath(
-                    roundedRect: barRect,
-                    xRadius: Self.bulletGuideHeight / 2,
-                    yRadius: Self.bulletGuideHeight / 2
-                )
-                symbolColor.withAlphaComponent(0.78).setFill()
-                barPath.fill()
-            }
         case .toggle:
             let triangle = NSBezierPath()
             if decoration.isCollapsed {
@@ -1082,9 +1055,6 @@ struct PlainMarkdownEditor: NSViewRepresentable {
                     } else if let list = listRegex.firstMatch(in: lineWithoutNewline, options: [], range: localRange) {
                         let markerAbsolute = absoluteRange(local: list.range(at: 2), lineStart: lineRange.location)
                         let markerToken = (lineWithoutNewline as NSString).substring(with: list.range(at: 2))
-                        let listContent = string(lineWithoutNewline, range: list.range(at: 4))
-                        let hasVisibleContent = !listContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                        let showsGuideBar = !isActiveLine || hasVisibleContent
                         let isOrderedMarker = parseOrderedMarker(markerToken) != nil
                         let markerSpaceAbsolute = absoluteRange(
                             local: NSRange(
@@ -1112,12 +1082,7 @@ struct PlainMarkdownEditor: NSViewRepresentable {
                                 range: markerSpaceAbsolute
                             )
                             decorations.append(
-                                .init(
-                                    kind: .bullet,
-                                    markerLocation: markerAbsolute.location,
-                                    isCollapsed: false,
-                                    showsGuideBar: showsGuideBar
-                                )
+                                .init(kind: .bullet, markerLocation: markerAbsolute.location, isCollapsed: false)
                             )
                             storage.addAttributes(
                                 hiddenMarkerAttributes(baseFont: baseFont, collapseFactor: 0.30),

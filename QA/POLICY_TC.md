@@ -41,20 +41,19 @@
 | TC-UX-023 | 안정성 | collapse 상태 marker 오프셋 이동 후 유지 | `InkArcQARunner.swift` |
 | TC-UX-024 | 4.4 | `/` 팔레트 필수 오브젝트 존재(텍스트/제목/목록/토글/페이지/콜아웃/인용/코드 블록) | `InkArcQARunner.swift` |
 | TC-UX-025 | 4.4 | `/` 팔레트 필수 오브젝트 템플릿 매핑 정확성 | `InkArcQARunner.swift` |
-| TC-VIS-001 | 5 | 불릿 시각 시그니처 유지(`dot + short bar`) | `InkArcQARunner.swift` + 수동 스모크 |
+| TC-VIS-001 | 5 | 불릿 시각 시그니처 유지(`dot only`) | `InkArcQARunner.swift` + 수동 스모크 |
 | TC-VIS-002 | 4.5 | 코드 블록/인라인 코드가 모노스페이스 + 배경 강조로 렌더 | `InkArcQARunner.swift` |
 | TC-VIS-003 | 6 | 체크박스 아이콘-텍스트 gap 범위(8~26px) | `InkArcQARunner.swift` |
 | TC-VIS-004 | 6 | 체크박스 아이콘 중심 y와 텍스트 라인 중심 y 오차(`<=1.2px`) | `InkArcQARunner.swift` |
 | TC-VIS-005 | 6 | 연속 행 체크박스 gap 편차(`<=1.2px`) | `InkArcQARunner.swift` |
 | TC-VIS-006 | 5 | 불릿 라인에서 원문 `-` 글리프가 보이지 않아 중복 마커가 발생하지 않음 | `InkArcQARunner.swift` |
-| TC-VIS-007 | 5 | 활성 빈 bullet 라인(`- `)은 guide bar를 숨겨 `dot`만 표시 | `InkArcQARunner.swift`, `InkArcUILiveQARunner.swift`, `InkArcAppQARunner.swift` |
 | TC-LIVE-001 | 6 | 실제 윈도우/입력 이벤트로 토글 자식 입력 가시성 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-002 | 6 | 실제 윈도우에서 insertLineBreak/insertNewlineIgnoringFieldEditor 폴백 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-003 | 6 | 실제 토글 아이콘 클릭 접기/펼치기 왕복 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-004 | 6 | 실제 체크박스 클릭 `[ ]`↔`[x]` 왕복 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-005 | 6 | 실제 Cmd/Alt+Enter 토글 단축키 동작 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-006 | 6 | 실제 리스트 Enter 연속/더블 Enter 종료 검증 | `InkArcUILiveQARunner.swift` |
-| TC-LIVE-007 | 5, 6 | 실제 `- ` 입력 시 불릿 중복 마커(`dot + short bar + '-'`) 비발생 검증 | `InkArcUILiveQARunner.swift` |
+| TC-LIVE-007 | 5, 6 | 실제 `- ` 입력 시 불릿 중복 마커(`dot + '-'`) 비발생 검증 | `InkArcUILiveQARunner.swift` |
 | TC-STRESS-001 | 6 | Live UI QA를 N회 반복 실행해 회귀/플레이키니스 검출 | `InkArcUILiveQARunner.swift` |
 | TC-STRESS-002 | 6, 7 | Live QA 배치 무한 반복(또는 지정 배치 수) 실행 시 실패 즉시 중단 | `run_live_soak.sh` |
 | TC-APP-001 | 6 | 실제 ReaderRootView 스택에서 불릿 중복 마커 비발생 검증 | `InkArcAppQARunner.swift` |
