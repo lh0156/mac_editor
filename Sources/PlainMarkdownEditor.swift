@@ -1895,11 +1895,15 @@ struct PlainMarkdownEditor: NSViewRepresentable {
                 ]
             }
 
-            let tiny = max(0.6, baseFont.pointSize * 0.04)
+            _ = baseFont
+            _ = collapseFactor
+            // Keep marker glyphs effectively non-rendering to avoid tiny visible dots
+            // on some fonts/IME states.
+            let tiny: CGFloat = 0.1
             return [
                 .font: NSFont.systemFont(ofSize: tiny, weight: .regular),
                 .foregroundColor: NSColor.clear,
-                .kern: 0
+                .kern: -0.2
             ]
         }
 
