@@ -384,12 +384,15 @@ struct InkArcUILiveQARunner {
             let h = makeHarness(initial: "")
             type("- ", in: h)
             expect(h.textView.string == "- ", "TC-LIVE-007: bullet line input mismatch")
-            let bulletCount = h.textView.lineDecorations.filter { $0.kind == .bullet }.count
-            expect(bulletCount == 1, "TC-LIVE-007: bullet decoration missing")
+            let bullets = h.textView.lineDecorations.filter { $0.kind == .bullet }
+            expect(bullets.count == 1, "TC-LIVE-007: bullet decoration missing")
             expect(
                 alpha(of: "-", in: h) <= 0.05,
                 "TC-LIVE-007: '-' glyph is visible with custom bullet (duplicate marker)"
             )
+            if let bullet = bullets.first {
+                expect(!bullet.showsGuideBar, "TC-LIVE-007: empty active bullet should hide guide bar")
+            }
             h.window.close()
         }
 

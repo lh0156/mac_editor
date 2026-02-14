@@ -443,6 +443,15 @@ struct InkArcQARunner {
         }
 
         do {
+            let (_, textView) = makeHarness(initial: "- ")
+            if let bullet = textView.lineDecorations.first(where: { $0.kind == .bullet }) {
+                expect(!bullet.showsGuideBar, "bullet marker: empty active bullet should hide guide bar to avoid '-' illusion")
+            } else {
+                failures.append("bullet marker: missing decoration for empty bullet line")
+            }
+        }
+
+        do {
             let (coordinator, textView) = makeHarness(initial: "> Parent\n  child line\n# Next")
             coordinator.applyTypography(to: textView)
             if let toggle = textView.lineDecorations.first(where: { $0.kind == .toggle }) {

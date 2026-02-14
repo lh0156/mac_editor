@@ -47,6 +47,7 @@
 | TC-VIS-004 | 6 | 체크박스 아이콘 중심 y와 텍스트 라인 중심 y 오차(`<=1.2px`) | `InkArcQARunner.swift` |
 | TC-VIS-005 | 6 | 연속 행 체크박스 gap 편차(`<=1.2px`) | `InkArcQARunner.swift` |
 | TC-VIS-006 | 5 | 불릿 라인에서 원문 `-` 글리프가 보이지 않아 중복 마커가 발생하지 않음 | `InkArcQARunner.swift` |
+| TC-VIS-007 | 5 | 활성 빈 bullet 라인(`- `)은 guide bar를 숨겨 `dot`만 표시 | `InkArcQARunner.swift`, `InkArcUILiveQARunner.swift`, `InkArcAppQARunner.swift` |
 | TC-LIVE-001 | 6 | 실제 윈도우/입력 이벤트로 토글 자식 입력 가시성 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-002 | 6 | 실제 윈도우에서 insertLineBreak/insertNewlineIgnoringFieldEditor 폴백 검증 | `InkArcUILiveQARunner.swift` |
 | TC-LIVE-003 | 6 | 실제 토글 아이콘 클릭 접기/펼치기 왕복 검증 | `InkArcUILiveQARunner.swift` |

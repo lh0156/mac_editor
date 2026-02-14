@@ -185,6 +185,11 @@ struct InkArcAppQARunner {
         if bulletDecorations != 1 {
             failures.append("APP-QA[\(round)] case1: missing bullet decoration")
         }
+        if let bullet = harness.textView.lineDecorations.first(where: { $0.kind == .bullet }) {
+            if bullet.showsGuideBar {
+                failures.append("APP-QA[\(round)] case1: empty active bullet should hide guide bar")
+            }
+        }
         if alpha(of: "-", in: harness) > 0.05 {
             failures.append("APP-QA[\(round)] case1: duplicate bullet marker visible")
         }

@@ -51,12 +51,20 @@ final class NotionMarkdownTextView: NSTextView {
         let markerLocation: Int
         let isCollapsed: Bool
         let isChecked: Bool
+        let showsGuideBar: Bool
 
-        init(kind: DecorationKind, markerLocation: Int, isCollapsed: Bool, isChecked: Bool = false) {
+        init(
+            kind: DecorationKind,
+            markerLocation: Int,
+            isCollapsed: Bool,
+            isChecked: Bool = false,
+            showsGuideBar: Bool = true
+        ) {
             self.kind = kind
             self.markerLocation = markerLocation
             self.isCollapsed = isCollapsed
             self.isChecked = isChecked
+            self.showsGuideBar = showsGuideBar
         }
     }
 
@@ -260,19 +268,21 @@ final class NotionMarkdownTextView: NSTextView {
             symbolColor.setFill()
             path.fill()
 
-            let barRect = NSRect(
-                x: dotRect.maxX + Self.bulletGuideGap,
-                y: frame.midY - (Self.bulletGuideHeight / 2),
-                width: Self.bulletGuideWidth,
-                height: Self.bulletGuideHeight
-            )
-            let barPath = NSBezierPath(
-                roundedRect: barRect,
-                xRadius: Self.bulletGuideHeight / 2,
-                yRadius: Self.bulletGuideHeight / 2
-            )
-            symbolColor.withAlphaComponent(0.78).setFill()
-            barPath.fill()
+            if decoration.showsGuideBar {
+                let barRect = NSRect(
+                    x: dotRect.maxX + Self.bulletGuideGap,
+                    y: frame.midY - (Self.bulletGuideHeight / 2),
+                    width: Self.bulletGuideWidth,
+                    height: Self.bulletGuideHeight
+                )
+                let barPath = NSBezierPath(
+                    roundedRect: barRect,
+                    xRadius: Self.bulletGuideHeight / 2,
+                    yRadius: Self.bulletGuideHeight / 2
+                )
+                symbolColor.withAlphaComponent(0.78).setFill()
+                barPath.fill()
+            }
         case .toggle:
             let triangle = NSBezierPath()
             if decoration.isCollapsed {
@@ -1072,6 +1082,9 @@ struct PlainMarkdownEditor: NSViewRepresentable {
                     } else if let list = listRegex.firstMatch(in: lineWithoutNewline, options: [], range: localRange) {
                         let markerAbsolute = absoluteRange(local: list.range(at: 2), lineStart: lineRange.location)
                         let markerToken = (lineWithoutNewline as NSString).substring(with: list.range(at: 2))
+                        let listContent = string(lineWithoutNewline, range: list.range(at: 4))
+                        let hasVisibleContent = !listContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        let showsGuideBar = !isActiveLine || hasVisibleContent
                         let isOrderedMarker = parseOrderedMarker(markerToken) != nil
                         let markerSpaceAbsolute = absoluteRange(
                             local: NSRange(
@@ -1099,7 +1112,12 @@ struct PlainMarkdownEditor: NSViewRepresentable {
                                 range: markerSpaceAbsolute
                             )
                             decorations.append(
-                                .init(kind: .bullet, markerLocation: markerAbsolute.location, isCollapsed: false)
+                                .init(
+                                    kind: .bullet,
+                                    markerLocation: markerAbsolute.location,
+                                    isCollapsed: false,
+                                    showsGuideBar: showsGuideBar
+                                )
                             )
                             storage.addAttributes(
                                 hiddenMarkerAttributes(baseFont: baseFont, collapseFactor: 0.30),
